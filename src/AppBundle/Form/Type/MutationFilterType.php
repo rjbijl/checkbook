@@ -2,10 +2,11 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Entity\Category;
 use AppBundle\Model\MutationFilter;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,18 +20,34 @@ class MutationFilterType extends AbstractType
         $builder
             ->add('startDate', DateType::class, [
                 'attr' => [
-                    'class' => 'datepicker',
+                    'class' => 'datepicker form-input',
                 ],
                 'widget' => 'single_text',
+                'required'   => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
             ])
             ->add('endDate', DateType::class, [
                 'attr' => [
-                    'class' => 'datepicker',
+                    'class' => 'datepicker form-input',
                 ],
                 'widget' => 'single_text',
+                'required'   => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Filter',
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'required'   => false,
+                'attr' => [
+                    'class' => 'form-input'
+                ],
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
             ])
         ;
     }

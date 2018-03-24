@@ -2,6 +2,8 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Category;
+
 class MutationFilter
 {
     /**
@@ -15,6 +17,11 @@ class MutationFilter
     private $endDate;
 
     /**
+     * @var Category
+     */
+    private $category;
+
+    /**
      * @return \DateTimeInterface
      */
     public function getStartDate()
@@ -26,7 +33,7 @@ class MutationFilter
      * @param \DateTimeInterface $startDate
      * @return MutationFilter
      */
-    public function setStartDate(\DateTimeInterface $startDate): MutationFilter
+    public function setStartDate(\DateTimeInterface $startDate = null): MutationFilter
     {
         $this->startDate = $startDate;
         return $this;
@@ -44,9 +51,27 @@ class MutationFilter
      * @param \DateTimeInterface $endDate
      * @return MutationFilter
      */
-    public function setEndDate(\DateTimeInterface $endDate): MutationFilter
+    public function setEndDate(\DateTimeInterface $endDate = null): MutationFilter
     {
         $this->endDate = $endDate;
+        return $this;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     * @return MutationFilter
+     */
+    public function setCategory(Category $category = null): MutationFilter
+    {
+        $this->category = $category;
         return $this;
     }
 }

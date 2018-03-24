@@ -61,6 +61,14 @@ class Mutation
      */
     private $description;
 
+    /**
+     * @var Category
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="mutations")
+     * @ORM\JoinColumn(referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $category;
+
+
     public function __construct()
     {
 
@@ -179,6 +187,27 @@ class Mutation
     public function setContraAccountNumber(string $contraAccountNumber): Mutation
     {
         $this->contraAccountNumber = $contraAccountNumber;
+        return $this;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     * @return Mutation
+     */
+    public function setCategory(Category $category): Mutation
+    {
+        if ($this->category !== $category) {
+            $this->category = $category;
+            $category->addMutation($this);
+        }
         return $this;
     }
 }

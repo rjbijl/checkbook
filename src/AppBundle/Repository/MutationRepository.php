@@ -28,7 +28,13 @@ class MutationRepository extends EntityRepository
                 ->setParameter('endDate', $filter->getEndDate())
             ;
         }
-        
+
+        if ($category = $filter->getCategory()) {
+            $qb->andWhere('m.category = :category')
+                ->setParameter('category', $filter->getCategory())
+            ;
+        }
+
         return $qb->getQuery()->getResult();
     }
 }
