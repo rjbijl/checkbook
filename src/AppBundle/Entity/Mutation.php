@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Mutation
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MutationRepository")
  * @ORM\Table(name="mutation")
  *
  * @package AppBundle\Entity
@@ -27,9 +27,9 @@ class Mutation
 
     /**
      * @var \DateTimeInterface
-     * @ORM\Column(name="datetime", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
-    private $datetime;
+    private $date;
 
     /**
      * @var string
@@ -77,21 +77,20 @@ class Mutation
     /**
      * @return \DateTimeInterface
      */
-    public function getDatetime(): \DateTimeInterface
+    public function getDate(): \DateTimeInterface
     {
-        return $this->datetime;
+        return $this->date;
     }
 
     /**
-     * @param \DateTimeInterface $datetime
+     * @param \DateTimeInterface $date
      * @return Mutation
      */
-    public function setDatetime(\DateTimeInterface $datetime): Mutation
+    public function setDate(\DateTimeInterface $date): Mutation
     {
-        $this->datetime = $datetime;
+        $this->date = $date;
         return $this;
     }
-
 
     /**
      * @return int

@@ -33,7 +33,7 @@ class ImportMutationsCommand extends ContainerAwareCommand
 
             $mutation = new Mutation();
             $mutation->setAmount(str_replace(',','.',$data[6]) * 100);
-            $mutation->setDatetime(\DateTimeImmutable::createFromFormat('Ymd', $data[0]));
+            $mutation->setDate(\DateTimeImmutable::createFromFormat('Ymd', $data[0]));
             $mutation->setType('Af' === $data[5] ? Mutation::TYPE_CREDIT : Mutation::TYPE_DEBIT);
             $mutation->setDescription($data[8]);
             $mutation->setContraAccountName($data[1]);

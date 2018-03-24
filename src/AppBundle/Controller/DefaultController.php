@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Mutation;
+use AppBundle\Form\Type\MutationFilterType;
+use AppBundle\Model\MutationFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,10 +15,17 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="homepage")
      * @Template
+     * @param Request $request
+     * @return array
      */
     public function indexAction(Request $request)
     {
-        $mutations = $this->getDoctrine()->getRepository(Mutation::class)->findBy([], ['datetime' => 'ASC']);
+        $filter = new MutationFilter();
+        $filterForm = $this->createForm(MutationFilterType::class, $filter, ['method' => 'get']);
+        $filterForm->handleRequest($request);
+
+        $mutations = $this->getDoctrine()->getRepository(Mutation::class)->findWithFilter($filter);
+
         $total = 0;
 
         /** @var Mutation $mutation */
@@ -30,6 +39,7 @@ class DefaultController extends Controller
 
         // replace this example code with whatever you need
         return [
+            'filterForm' => $filterForm->createView(),
             'mutations' => $mutations,
             'total' => $total,
         ];
