@@ -3,22 +3,31 @@
 namespace AppBundle\Mutation;
 
 use AppBundle\Entity\Mutation;
+use AppBundle\Repository\MutationRepository;
 use Doctrine\ORM\EntityManager;
 
 class RaboImporter implements ImporterInterface
 {
+    use ImporterTrait;
+
     /**
      * @var EntityManager
      */
     private $em;
 
     /**
-     * IngImporter constructor.
+     * @var MutationRepository
+     */
+    private $mutationRepository;
+
+    /**
+     * RaboImporter constructor.
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->mutationRepository = $em->getRepository(Mutation::class);
     }
 
     /**
@@ -28,8 +37,7 @@ class RaboImporter implements ImporterInterface
     {
         $file = fopen($filename, 'r');
         while ($data = fgetcsv($file)) {
-            dump($data);die;
-            if ('Datum' === $data[0]) {
+            if ('IBAN/BBAN' === $data[0]) {
                 continue;
             }
 
@@ -53,15 +61,39 @@ class RaboImporter implements ImporterInterface
      */
     private function createMutationFromDataArray(array $data): Mutation
     {
-        $mutation = new Mutation();
+        $mutation = $this->getCreateMutation($this->mutationRepository, $data[0], $data[3]);
 
-        $mutation->setAmount(str_replace(',','.',$data[6]) * 100);
-        $mutation->setDate(\DateTimeImmutable::createFromFormat('Ymd', $data[0]));
-        $mutation->setType('Af' === $data[5] ? Mutation::TYPE_CREDIT : Mutation::TYPE_DEBIT);
-        $mutation->setDescription($data[8]);
-        $mutation->setContraAccountName($data[1]);
-        $mutation->setContraAccountNumber($data[3]);
+        $amount = (float) str_replace(',','.',$data[6]);
+        $mutation->setAmount(abs($amount) * 100);
+        $mutation->setDate(\DateTimeImmutable::createFromFormat('Y-m-d', $data[4]));
+        $mutation->setType($amount < 0 ? Mutation::TYPE_CREDIT : Mutation::TYPE_DEBIT);
+        $mutation->setDescription($this->mergeDescriptions($data));
+        $mutation->setContraAccountName($data[9]);
+        $mutation->setContraAccountNumber($data[8]);
 
         return $mutation;
+    }
+
+    /**
+     * Merge the description fields into one field
+     *
+     * @param array $data
+     * @return string
+     */
+    private function mergeDescriptions(array $data): string
+    {
+        $description = trim($data[19]);
+
+        $extraDescription = trim($data[20]);
+        if (!empty($extraDescription)) {
+            $description = sprintf('%s ; %s', $description, $extraDescription);
+        }
+
+        $extraDescription = trim($data[21]);
+        if (!empty($extraDescription)) {
+            $description = sprintf('%s ; %s', $description, $extraDescription);
+        }
+
+        return $description;
     }
 }

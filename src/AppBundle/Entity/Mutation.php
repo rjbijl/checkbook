@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Mutation
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MutationRepository")
- * @ORM\Table(name="mutation")
+ * @ORM\Table(name="mutation", uniqueConstraints={@ORM\UniqueConstraint(name="identifier_idx", columns={"account_number", "identifier"})}))
  *
  * @package AppBundle\Entity
  */
@@ -30,6 +30,12 @@ class Mutation
      * @ORM\Column(name="date", type="date")
      */
     private $date;
+
+    /**
+     * @var string
+     * @ORM\Column(name="account_number", type="string")
+     */
+    private $accountNumber;
 
     /**
      * @var string
@@ -62,17 +68,17 @@ class Mutation
     private $description;
 
     /**
+     * @var string
+     * @ORM\Column(name="identifier", type="string")
+     */
+    private $identifier;
+
+    /**
      * @var Category
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="mutations")
      * @ORM\JoinColumn(referencedColumnName="id", onDelete="SET NULL")
      */
     private $category;
-
-
-    public function __construct()
-    {
-
-    }
 
     /**
      * @return int
@@ -97,6 +103,24 @@ class Mutation
     public function setDate(\DateTimeInterface $date): Mutation
     {
         $this->date = $date;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountNumber(): string
+    {
+        return $this->accountNumber;
+    }
+
+    /**
+     * @param string $accountNumber
+     * @return Mutation
+     */
+    public function setAccountNumber(string $accountNumber): Mutation
+    {
+        $this->accountNumber = $accountNumber;
         return $this;
     }
 
@@ -208,6 +232,24 @@ class Mutation
             $this->category = $category;
             $category->addMutation($this);
         }
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     * @return Mutation
+     */
+    public function setIdentifier(string $identifier): Mutation
+    {
+        $this->identifier = $identifier;
         return $this;
     }
 }

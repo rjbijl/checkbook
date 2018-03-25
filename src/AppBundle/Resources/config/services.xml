@@ -8,5 +8,8 @@
         <service id="app.mutation.importer_ing" class="AppBundle\Mutation\IngImporter">
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
+        <service id="app.mutation.importer_rabo" class="AppBundle\Mutation\RaboImporter">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
     </services>
 </container>

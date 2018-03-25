@@ -3,14 +3,22 @@
 namespace AppBundle\Mutation;
 
 use AppBundle\Entity\Mutation;
+use AppBundle\Repository\MutationRepository;
 use Doctrine\ORM\EntityManager;
 
 class IngImporter implements ImporterInterface
 {
+    use ImporterTrait;
+
     /**
      * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var MutationRepository
+     */
+    private $mutationRepository;
 
     /**
      * IngImporter constructor.
@@ -19,6 +27,7 @@ class IngImporter implements ImporterInterface
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->mutationRepository = $em->getRepository(Mutation::class);
     }
 
     /**
@@ -38,12 +47,12 @@ class IngImporter implements ImporterInterface
 
         fclose($file);
 
-        try {
+//        try {
             $this->em->flush();
             return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+//        } catch (\Exception $e) {
+//            return false;
+//        }
     }
 
     /**
@@ -52,7 +61,8 @@ class IngImporter implements ImporterInterface
      */
     private function createMutationFromDataArray(array $data): Mutation
     {
-        $mutation = new Mutation();
+        $identifier = sprintf('%s-%s', $data[0], substr($data[8], 0, 100));
+        $mutation = $this->getCreateMutation($this->mutationRepository, $data[2], $identifier);
 
         $mutation->setAmount(str_replace(',','.',$data[6]) * 100);
         $mutation->setDate(\DateTimeImmutable::createFromFormat('Ymd', $data[0]));
