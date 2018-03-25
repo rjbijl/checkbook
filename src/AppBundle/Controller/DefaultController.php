@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Mutation;
 use AppBundle\Form\Type\MutationFilterType;
-use AppBundle\Model\MutationFilter;
+use AppBundle\Model\Mutation\Filter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,7 +20,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $filter = new MutationFilter();
+        $filter = new Filter();
         $filterForm = $this->createForm(MutationFilterType::class, $filter, ['method' => 'get']);
         $filterForm->handleRequest($request);
 

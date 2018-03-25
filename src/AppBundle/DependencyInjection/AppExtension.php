@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\DependencyInjection\AppExtension;
+namespace AppBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;

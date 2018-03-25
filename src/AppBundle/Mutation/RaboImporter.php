@@ -5,7 +5,7 @@ namespace AppBundle\Mutation;
 use AppBundle\Entity\Mutation;
 use Doctrine\ORM\EntityManager;
 
-class IngImporter implements ImporterInterface
+class RaboImporter implements ImporterInterface
 {
     /**
      * @var EntityManager
@@ -28,6 +28,7 @@ class IngImporter implements ImporterInterface
     {
         $file = fopen($filename, 'r');
         while ($data = fgetcsv($file)) {
+            dump($data);die;
             if ('Datum' === $data[0]) {
                 continue;
             }

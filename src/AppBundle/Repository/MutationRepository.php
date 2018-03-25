@@ -2,16 +2,16 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Model\MutationFilter;
+use AppBundle\Model\Mutation\Filter;
 use Doctrine\ORM\EntityRepository;
 
 class MutationRepository extends EntityRepository
 {
     /**
-     * @param MutationFilter $filter
+     * @param Filter $filter
      * @return array
      */
-    public function findWithFilter(MutationFilter $filter) :array
+    public function findWithFilter(Filter $filter) :array
     {
         $qb = $this->createQueryBuilder('m')
             ->orderBy('m.date', 'ASC')

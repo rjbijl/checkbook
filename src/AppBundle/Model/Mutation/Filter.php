@@ -1,10 +1,10 @@
 <?php
 
-namespace AppBundle\Model;
+namespace AppBundle\Model\Mutation;
 
 use AppBundle\Entity\Category;
 
-class MutationFilter
+class Filter
 {
     /**
      * @var \DateTimeInterface
@@ -31,9 +31,9 @@ class MutationFilter
 
     /**
      * @param \DateTimeInterface $startDate
-     * @return MutationFilter
+     * @return Filter
      */
-    public function setStartDate(\DateTimeInterface $startDate = null): MutationFilter
+    public function setStartDate(\DateTimeInterface $startDate = null): Filter
     {
         $this->startDate = $startDate;
         return $this;
@@ -49,9 +49,9 @@ class MutationFilter
 
     /**
      * @param \DateTimeInterface $endDate
-     * @return MutationFilter
+     * @return Filter
      */
-    public function setEndDate(\DateTimeInterface $endDate = null): MutationFilter
+    public function setEndDate(\DateTimeInterface $endDate = null): Filter
     {
         $this->endDate = $endDate;
         return $this;
@@ -67,9 +67,9 @@ class MutationFilter
 
     /**
      * @param Category $category
-     * @return MutationFilter
+     * @return Filter
      */
-    public function setCategory(Category $category = null): MutationFilter
+    public function setCategory(Category $category = null): Filter
     {
         $this->category = $category;
         return $this;
