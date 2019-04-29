@@ -47,12 +47,12 @@ class IngImporter implements ImporterInterface
 
         fclose($file);
 
-//        try {
+        try {
             $this->em->flush();
             return true;
-//        } catch (\Exception $e) {
-//            return false;
-//        }
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
