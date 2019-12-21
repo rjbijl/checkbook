@@ -61,7 +61,7 @@ class IngImporter implements ImporterInterface
      */
     private function createMutationFromDataArray(array $data): Mutation
     {
-        $identifier = sprintf('%s-%s', $data[0], substr($data[8], 0, 100));
+        $identifier = md5(sprintf('%s-%s', $data[0], $data[8]));
         $mutation = $this->getCreateMutation($this->mutationRepository, $data[2], $identifier);
 
         $mutation->setAmount(str_replace(',','.',$data[6]) * 100);

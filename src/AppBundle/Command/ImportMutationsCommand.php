@@ -13,8 +13,9 @@ class ImportMutationsCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ImportMutationsCommand')
+            ->setName('app:import:mutations')
             ->setDescription('Import mutations from a bank export')
+            ->setHelp('Import mutations from a bank export')
             ->addArgument('filename', InputArgument::REQUIRED, 'The file to import')
             ->addArgument('type', InputArgument::REQUIRED, 'The type of file to import (ing|rabo)')
         ;
@@ -24,9 +25,13 @@ class ImportMutationsCommand extends ContainerAwareCommand
     {
         /** @var ImporterInterface $importer */
         $importer = $this->getContainer()->get(sprintf('app.mutation.importer_%s', $input->getArgument('type')));
-        $importer->processFile($input->getArgument('filename'));
 
-        $output->writeln(sprintf('<info>Processed file %s</info>', $input->getArgument('filename')));
+        if ($importer->processFile($input->getArgument('filename'))) {
+            $output->writeln(sprintf('<info>Processed file %s</info>', $input->getArgument('filename')));
+        } else {
+            $output->writeln(sprintf('<error>Failed processing file %s</error>', $input->getArgument('filename')));
+        }
+
         exit(0);
     }
 }
