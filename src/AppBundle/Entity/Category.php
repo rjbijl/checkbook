@@ -24,6 +24,19 @@ class Category
     private $id;
 
     /**
+     * @var Category
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $parent = null;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="parent")
+     */
+    private $children;
+    
+    /**
      * @var string
      * @ORM\Column(name="name", type="string")
      */
@@ -43,6 +56,7 @@ class Category
     {
         $this->name = $name;
         $this->mutations = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -68,6 +82,27 @@ class Category
     public function setName(string $name): Category
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getParent(): Category
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Category $parent
+     */
+    public function setParent(Category $parent)
+    {
+        if ($this->parent !== $parent) {
+            $this->parent = $parent;
+            $parent->addChild($this);
+        }
+        
         return $this;
     }
 
@@ -98,6 +133,37 @@ class Category
         if (!$this->mutations->contains($mutation)) {
             $this->mutations->add($mutation);
             $mutation->setCategory($this);
+        }
+
+        return $this;
+    }
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren(): ArrayCollection
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param ArrayCollection $children
+     * @return Category
+     */
+    public function setChildren(ArrayCollection $children): Category
+    {
+        $this->children = $children;
+        return $this;
+    }
+
+    /**
+     * @param Category $child
+     * @return Category
+     */
+    public function addChild(Category $child): Category
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
         }
 
         return $this;
